@@ -36,6 +36,43 @@
 
 <script>
 //Your code goes here 
+	const items = document.querySelectorAll('.item');
+  let draggedItem = null;
+  let offsetX = 0;
+  let offsetY = 0;
+
+  items.forEach(item => {
+    item.addEventListener('mousedown', (e) => {
+      draggedItem = item;
+      offsetX = e.clientX - item.getBoundingClientRect().left;
+      offsetY = e.clientY - item.getBoundingClientRect().top;
+      item.classList.add('active');
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    });
+  });
+
+  function onMouseMove(e) {
+    if (draggedItem) {
+      const newX = e.clientX - offsetX;
+      const newY = e.clientY - offsetY;
+      draggedItem.style.position = 'absolute';
+      draggedItem.style.left = `${newX}px`;
+      draggedItem.style.top = `${newY}px`;
+    }
+  }
+
+  function onMouseUp() {
+    if (draggedItem) {
+      draggedItem.classList.remove('active');
+      draggedItem.style.position = '';
+      draggedItem.style.left = '';
+      draggedItem.style.top = '';
+      draggedItem = null;
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    }
+  }
 </script>
 
   </body>
