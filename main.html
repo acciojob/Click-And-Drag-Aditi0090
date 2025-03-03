@@ -35,32 +35,32 @@
   </div>
 
 <script>
-//Your code goes here 
-	const items = document.querySelectorAll('.item');
+const items = document.querySelectorAll('.item');
 const container = document.querySelector('.items');
 let draggedItem = null;
 let offsetX = 0;
 let offsetY = 0;
 
 items.forEach(item => {
-  item.addEventListener('mousedown', (e) => {
+  item.addEventListener('pointerdown', (e) => {
     draggedItem = item;
     offsetX = e.clientX - item.getBoundingClientRect().left;
     offsetY = e.clientY - item.getBoundingClientRect().top;
     item.style.position = 'absolute';
     item.style.zIndex = '1000';
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
+    
+    document.addEventListener('pointermove', onPointerMove);
+    document.addEventListener('pointerup', onPointerUp);
   });
 });
 
-function onMouseMove(e) {
+function onPointerMove(e) {
   if (draggedItem) {
     const containerRect = container.getBoundingClientRect();
     let newX = e.clientX - offsetX;
     let newY = e.clientY - offsetY;
 
-    // Ensure the cube stays within the defined area
+    // Ensure the item stays within the container
     const maxX = containerRect.width - draggedItem.offsetWidth;
     const maxY = containerRect.height - draggedItem.offsetHeight;
 
@@ -72,14 +72,15 @@ function onMouseMove(e) {
   }
 }
 
-function onMouseUp() {
+function onPointerUp() {
   if (draggedItem) {
     draggedItem.style.zIndex = '';
     draggedItem = null;
-    document.removeEventListener('mousemove', onMouseMove);
-    document.removeEventListener('mouseup', onMouseUp);
+    document.removeEventListener('pointermove', onPointerMove);
+    document.removeEventListener('pointerup', onPointerUp);
   }
 }
+
 
 </script>
 
