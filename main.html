@@ -37,42 +37,50 @@
 <script>
 //Your code goes here 
 	const items = document.querySelectorAll('.item');
-  let draggedItem = null;
-  let offsetX = 0;
-  let offsetY = 0;
+const container = document.querySelector('.items');
+let draggedItem = null;
+let offsetX = 0;
+let offsetY = 0;
 
-  items.forEach(item => {
-    item.addEventListener('mousedown', (e) => {
-      draggedItem = item;
-      offsetX = e.clientX - item.getBoundingClientRect().left;
-      offsetY = e.clientY - item.getBoundingClientRect().top;
-      item.classList.add('active');
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
-    });
+items.forEach(item => {
+  item.addEventListener('mousedown', (e) => {
+    draggedItem = item;
+    offsetX = e.clientX - item.getBoundingClientRect().left;
+    offsetY = e.clientY - item.getBoundingClientRect().top;
+    item.style.position = 'absolute';
+    item.style.zIndex = '1000';
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   });
+});
 
-  function onMouseMove(e) {
-    if (draggedItem) {
-      const newX = e.clientX - offsetX;
-      const newY = e.clientY - offsetY;
-      draggedItem.style.position = 'absolute';
-      draggedItem.style.left = `${newX}px`;
-      draggedItem.style.top = `${newY}px`;
-    }
-  }
+function onMouseMove(e) {
+  if (draggedItem) {
+    const containerRect = container.getBoundingClientRect();
+    let newX = e.clientX - offsetX;
+    let newY = e.clientY - offsetY;
 
-  function onMouseUp() {
-    if (draggedItem) {
-      draggedItem.classList.remove('active');
-      draggedItem.style.position = '';
-      draggedItem.style.left = '';
-      draggedItem.style.top = '';
-      draggedItem = null;
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-    }
+    // Ensure the cube stays within the defined area
+    const maxX = containerRect.width - draggedItem.offsetWidth;
+    const maxY = containerRect.height - draggedItem.offsetHeight;
+
+    newX = Math.max(containerRect.left, Math.min(newX, containerRect.left + maxX));
+    newY = Math.max(containerRect.top, Math.min(newY, containerRect.top + maxY));
+
+    draggedItem.style.left = `${newX}px`;
+    draggedItem.style.top = `${newY}px`;
   }
+}
+
+function onMouseUp() {
+  if (draggedItem) {
+    draggedItem.style.zIndex = '';
+    draggedItem = null;
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  }
+}
+
 </script>
 
   </body>
